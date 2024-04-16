@@ -1,8 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.List;
@@ -40,7 +42,7 @@ public class Lab7 {
   public static void main(String[] args) {
     EventQueue.invokeLater(() -> {
       try {
-        Lab7 app = new Lab7(2);
+        Lab7 app = new Lab7(3);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
@@ -317,8 +319,89 @@ class Zadanie2PanelComponent extends Zadanie1Panel {
 
 }
 
-class Zadanie3 {
+class Zadanie3 extends JFrame {
+  private JPanel btnPanel;
+  private JButton[] buttons;
+  private int[] fs;
+  private int j = 0;
+  private Boolean turn = true;
+  private Boolean gameEnded = false;
+
   public Zadanie3() {
-    
+    setSize(600, 600);
+    setVisible(true);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setTitle("ZAD3_IMIE_NAZIWSKO");
+    setupButtons();
+  }
+
+  private int getJ() {
+    return this.j;
+  } 
+
+  private void setupButtons() {
+    this.btnPanel = new JPanel();
+    this.btnPanel.setLayout(new GridLayout(3, 3));
+    this.buttons = new JButton[9];
+    this.fs = new int[9];
+    for (; this.j<9; this.j++) {
+      int i = getJ();
+      JButton button = new JButton();
+      button.setFont(new Font("Arial", Font.PLAIN, 40));
+      button.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {buttonAction(i);}});
+      this.buttons[i] = button;
+      this.btnPanel.add(button);
+    }
+    add(this.btnPanel);
+  }
+
+  private void buttonAction(int buttonId) {
+    if (this.gameEnded) {restart(); return;} 
+    if (this.fs[buttonId] != 0) return;
+
+    this.buttons[buttonId].setText(this.turn ? "O" : "X");
+    this.fs[buttonId] = this.turn ? 1 : -1;
+    this.turn = !this.turn;
+  
+    loopCheck(0, 1);
+    loopCheck(0, 3);
+    loopCheck(0,4);
+    loopCheck(1, 3);
+    loopCheck(2, 2);
+    loopCheck(2, 3);
+    loopCheck(3, 1);
+    loopCheck(6, 1);
+  }
+
+  private void loopCheck(int start, int diff) {
+    int sum = 0;
+    for (int i=start; i<3*diff; i+=diff) {
+      sum += this.fs[i];
+    }
+    if (sum == 3) {
+      this.gameEnded = true;
+      for (int i=0; i<9; i++) this.buttons[i].setBackground(Color.BLACK);
+      this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
+      this.buttons[4].setBackground(Color.WHITE);
+      this.buttons[4].setText("Wygrywa kółko");
+    } else if (sum == -3) {
+      this.gameEnded = true;
+      for (int i=0; i<9; i+=2) this.buttons[i].setBackground(Color.BLACK);
+      
+      this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
+      this.buttons[4].setText("Wygrywa krzyżyk");
+      this.buttons[4].setForeground(Color.WHITE);;
+    }
+  }
+
+  private void restart() {
+    remove(this.btnPanel);
+    this.j = 0;
+    this.gameEnded = false;
+    this.turn = true;
+
+    setupButtons();
+    revalidate();
+    repaint();
   }
 }
