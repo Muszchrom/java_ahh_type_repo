@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
-
+ 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -28,19 +29,25 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+ 
 public class Lab7 {
   public static void main(String[] args) {
     EventQueue.invokeLater(() -> {
       try {
-        Lab7 app = new Lab7(3);
+        // wybierz zadanie
+        // 1 - zapisywnaie do pliku
+        // 2 - odczytywnanie i edycja
+        // 3 - tic tac toe
+        Lab7 app = new Lab7(1);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
     });
   }
-
+ 
   public Lab7(Integer zadanie) {
     switch (zadanie) {
       case 1:
@@ -57,7 +64,7 @@ public class Lab7 {
     }
   }
 }
-
+ 
 class AppWrapper extends JFrame {
   public AppWrapper() {
     setSize(800, 600);
@@ -65,25 +72,25 @@ class AppWrapper extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 }
-
+ 
 class Zadanie1 extends AppWrapper {
   PrintWriter writer;
   public Zadanie1() {
     setTitle("ZAD1_IMIE_NAZWISKO");
     Zadanie1Panel z = new Zadanie1Panel();
-
+ 
     JButton testButton = new JButton("Dodaj do pliku");
     testButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         saveToFile(z.getValues());
       }
     });
-
+ 
     add(z, BorderLayout.CENTER);
     add(testButton, BorderLayout.SOUTH);
     setupWriter();
   }
-
+ 
   private void saveToFile(String data) {
     if (this.writer != null) {
       this.writer.write(data + "\n");
@@ -92,7 +99,7 @@ class Zadanie1 extends AppWrapper {
       setupWriter();
     }
   }
-
+ 
   private void setupWriter() {
     JFileChooser chooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
@@ -108,7 +115,7 @@ class Zadanie1 extends AppWrapper {
     }
   }
 }
-
+ 
 class Zadanie1Panel extends JPanel {
   protected JTextField name;
   protected JTextField s_name;
@@ -119,18 +126,18 @@ class Zadanie1Panel extends JPanel {
   protected JComboBox<String> fieldOfStudy;
   protected JList<String> monthOfBirth;
   protected JCheckBox graduate;
-
+ 
   public Zadanie1Panel() {
     Integer[] a = IntStream.range(0, 121).boxed().toArray(Integer[]::new);
-    String[] f = {"Budownictwo", "Architektura", "Elektrotechnika", "Informatyka", "Inżynieria biomedyczna (kierunek prowadzony razem z Wydziałem Mechanicznym)", "Inżynierskie zastosowania informatyki w elektrotechnice", "Inżynieria multimediów", "Mechatronika (kierunek prowadzony razem z Wydziałem Mechanicznym)", "Inżynieria recyklingu (NOWY KIERUNEK!)", "Inżynieria odnawialnych źródeł energii", "Inżynieria środowiska", "Energetyka (NOWY KIERUNEK!)", "Mechanika i budowa maszyn", "Mechatronika (kierunek prowadzony razem z Wydziałem Elektrotechniki i Informatyki)", "Zarządzanie i inżynieria produkcji ", "Transport", "Inżynieria biomedyczna (kierunek prowadzony wspólnie z Wydziałem Elektrotechniki i Informatyki)", "Robotyzacja procesów wytwórczych", "Inżynieria pojazdów (NOWY KIERUNEK!)", "Matematyka (studia inżynierskie)", "Edukacja techniczno-informatyczna", "Inżynieria bezpieczeństwa", "Inżynieria i analiza danych", "Zarządzanie", "Finanse i rachunkowość", "Marketing i komunikacja rynkowa", "Inżynieria logistyki", "Sztuczna inteligencja w biznesie"};
+    String[] f = {"Budownictwo", "Architektura", "Elektrotechnika", "Informatyka", "Inżynieria biomedyczna (kierunek prowadzony razem z Wydziałem Mechanicznym)", "Inżynierskie zastosowania informatyki w elektrotechnice", "Inżynieria multimediów", "Mechatronika (kierunek prowadzony razem z Wydziałem Mechanicznym)", "Inżynieria recyklingu (NOWY KIERUNEK!)", "Inżynieria odnawialnych źródeł energii", "Inżynieria środowiska", "Energetyka (NOWY KIERUNEK!)", "Mechanika i budowa maszyn", "Mechatronika (kierunek prowadzony razem z Wydziałem Elektrotechniki i Informatyki)", "Zarządzanie i inżynieria produkcji ", "Transport", "Inżynieria biomedyczna (kierunek prowadzony wspólnie z Wydziałem Elektrotechniki i Informatyki)", "Robotyzacja procesów wytwórczych", "Inżynieria pojazdów (NOWY KIERUNEK!)", "Matematyka (studia inżynierskie)", "Edukacja techniczno-informatyczna", "Inżynieria bezpieczeństwa", "Inżynieria i analiza danych", "Zarządzanie", "Finanse i rachunkowość", "Marketing i komunikacja rynkowa", "Inżynieria logistyki", "Sztuczna inteligencja w biznesie"};
     for (int i=0; i<f.length; i++) {
       if (f[i].length() > 20) {
         f[i] = f[i].substring(0, 15) + "...";
       } 
     }
     String[] m = {"Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"};
-
-
+ 
+ 
     this.name = new JTextField();
     this.s_name = new JTextField();
     this.age = new JList<>(a);
@@ -141,11 +148,11 @@ class Zadanie1Panel extends JPanel {
     this.fieldOfStudy = new JComboBox<>(f);
     this.monthOfBirth = new JList<>(m);
     this.graduate = new JCheckBox();
-    
+ 
     gender.add(gender_f); gender.add(gender_m);
     addInputs();
   }
-
+ 
   public String getValues() {
     String s = this.name.getText() + "\t" + 
                this.s_name.getText() + "\t" +
@@ -156,7 +163,7 @@ class Zadanie1Panel extends JPanel {
                this.graduate.isSelected() + "\t";
     return s;
   }
-
+ 
   private <T> JPanel smallWrapper(T input, String label) {
     JPanel wrapper = new JPanel();
     wrapper.setLayout(new BorderLayout());
@@ -176,7 +183,7 @@ class Zadanie1Panel extends JPanel {
     }
     return wrapper;
   }
-
+ 
   private void addInputs() {
     add(smallWrapper(this.name,         "Imię             "));
     add(smallWrapper(this.s_name,       "Nazwisko         "));
@@ -188,17 +195,17 @@ class Zadanie1Panel extends JPanel {
     add(smallWrapper(this.graduate,     "Absolwent        "));
   }
 }
-
+ 
 class Zadanie2 extends AppWrapper{
   private JLabel appTitle;
   private ArrayList<Zadanie2PanelComponent> dataReferences;
   private JScrollPane scrollPane;
-
+ 
   public Zadanie2() {
     setTitle("ZAD2_IMIE_NAZWISKO");
     this.appTitle = new JLabel("Otwieranie pliku ...");
     this.dataReferences = new ArrayList<Zadanie2PanelComponent>();
-
+ 
     // Button that loads data
     JButton testButton = new JButton("Otwórz plik");
     testButton.addActionListener(new ActionListener() {
@@ -214,7 +221,7 @@ class Zadanie2 extends AppWrapper{
         updateScrollPane(scrollPane);
       }
     });
-
+ 
     // Button that saves data
     JButton saveButton = new JButton("Zapisz do pliku");
     saveButton.addActionListener(new ActionListener() {
@@ -222,15 +229,15 @@ class Zadanie2 extends AppWrapper{
         saveToFile();
       }
     });
-
+ 
     add(this.appTitle, BorderLayout.NORTH);
-
+ 
     JPanel buttonsPanel = new JPanel();
     buttonsPanel.add(testButton);
     buttonsPanel.add(saveButton);
     add(buttonsPanel, BorderLayout.SOUTH);
   }
-
+ 
   // remove reference to old panel since without that the new panel would overlap 
   // save reference to new panel and add it to the frame 
   private void updateScrollPane(JScrollPane pane) {
@@ -241,11 +248,11 @@ class Zadanie2 extends AppWrapper{
     add(this.scrollPane, BorderLayout.CENTER);
     setVisible(true);
   }
-
+ 
   private ArrayList<Zadanie2PanelComponent> getReferences() {
     return this.dataReferences;
   }
-
+ 
   // Loads a file and returns array of references to Zadanie2PanelComponent which is basically Zadanie1Panel
   private void setupReaderAndLoadData() {
     JFileChooser chooser = new JFileChooser();
@@ -267,12 +274,12 @@ class Zadanie2 extends AppWrapper{
       }
     }
   }
-
+ 
   private void saveToFile() {
     JFileChooser chooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
     chooser.setFileFilter(filter);
-
+ 
     if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
       try {
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(chooser.getSelectedFile().getPath(), true)));
@@ -286,18 +293,18 @@ class Zadanie2 extends AppWrapper{
       }
     }
   }
-
+ 
 }
-
+ 
 class Zadanie2PanelComponent extends Zadanie1Panel {
   public Zadanie2PanelComponent() {
     super();
   }
-
+ 
   public void setValues(String line) {
     line = line.substring(0, line.length() - 1);
     String[] strarr = line.split("\t");
-
+ 
     this.name.setText(strarr[0]);
     this.s_name.setText(strarr[1]);
     if (strarr[2].length() != 0) this.age.setSelectedValue(Integer.parseInt(strarr[2]), true);
@@ -308,9 +315,9 @@ class Zadanie2PanelComponent extends Zadanie1Panel {
     if (strarr[6].equals("true")) this.graduate.setSelected(true);
     else this.graduate.setSelected(false);
   } 
-
+ 
 }
-
+ 
 class Zadanie3 extends JFrame {
   private JPanel btnPanel;
   private JButton[] buttons;
@@ -318,19 +325,20 @@ class Zadanie3 extends JFrame {
   private int j = 0;
   private Boolean turn = true;
   private Boolean gameEnded = false;
-
+  private JLabel turnLabel;
+ 
   public Zadanie3() {
-    setSize(600, 600);
+    setSize(600, 700);
     setVisible(true);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setTitle("ZAD3_IMIE_NAZIWSKO");
     setupButtons();
   }
-
+ 
   private int getJ() {
     return this.j;
   } 
-
+ 
   private void setupButtons() {
     this.btnPanel = new JPanel();
     this.btnPanel.setLayout(new GridLayout(3, 3));
@@ -343,55 +351,101 @@ class Zadanie3 extends JFrame {
       button.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {buttonAction(i);}});
       this.buttons[i] = button;
       this.btnPanel.add(button);
+      this.btnPanel.setPreferredSize(new Dimension(600, 600));
     }
-    add(this.btnPanel);
+    this.turnLabel = new JLabel("Ruch: O", SwingConstants.CENTER);
+    this.turnLabel.setFont(new Font("Arial", Font.BOLD, 32));
+    add(this.turnLabel, BorderLayout.NORTH);
+    add(this.btnPanel, BorderLayout.CENTER);
   }
-
+ 
   private void buttonAction(int buttonId) {
     if (this.gameEnded) {restart(); return;} 
     if (this.fs[buttonId] != 0) return;
-
     this.buttons[buttonId].setText(this.turn ? "O" : "X");
     this.fs[buttonId] = this.turn ? 1 : -1;
     this.turn = !this.turn;
-  
-    loopCheck(0, 1);
-    loopCheck(0, 3);
-    loopCheck(0,4);
-    loopCheck(1, 3);
-    loopCheck(2, 2);
-    loopCheck(2, 3);
-    loopCheck(3, 1);
-    loopCheck(6, 1);
+ 
+    this.turnLabel.setText("Ruch: " + (this.turn ? "O" : "X"));
+ 
+    // if the "if" wasnt there then there could be a case, where
+    // if there was one place left then on the last move O or X
+    // would win but the checkIfDraw() would override that
+    if (!this.gameEnded) loopCheck(0, 1);
+    if (!this.gameEnded) loopCheck(0, 3);
+    if (!this.gameEnded) loopCheck(0,4);
+    if (!this.gameEnded) loopCheck(1, 3);
+    if (!this.gameEnded) loopCheck(2, 2);
+    if (!this.gameEnded) loopCheck(2, 3);
+    if (!this.gameEnded) loopCheck(3, 1);
+    if (!this.gameEnded) loopCheck(6, 1);
+    if (!this.gameEnded) checkIfDraw();
   }
-
+// 0 4 8
+// 2 4 6
+  private void checkIfDraw() {
+    // fs stands for field status
+    // it initialized with setupButtons()
+    // its int so after init its all zeros
+    // so the game ends if there's no zeros on board
+    // other states are 1 and -1 depending on X or O
+    for (int i=0; i<9; i++) {
+      if (this.fs[i] == 0) {
+        return;
+      } 
+    }
+    endGame(0);
+  }
+ 
   private void loopCheck(int start, int diff) {
     int sum = 0;
-    for (int i=start; i<3*diff; i+=diff) {
+    for (int i=start; i<3*diff+start; i+=diff) {
       sum += this.fs[i];
     }
     if (sum == 3) {
-      this.gameEnded = true;
-      for (int i=0; i<9; i++) this.buttons[i].setBackground(Color.BLACK);
-      this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
-      this.buttons[4].setBackground(Color.WHITE);
-      this.buttons[4].setText("Wygrywa kółko");
+      endGame(1);
     } else if (sum == -3) {
-      this.gameEnded = true;
-      for (int i=0; i<9; i+=2) this.buttons[i].setBackground(Color.BLACK);
-      
-      this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
-      this.buttons[4].setText("Wygrywa krzyżyk");
-      this.buttons[4].setForeground(Color.WHITE);;
+      endGame(-1);
     }
   }
-
+ 
+  private void endGame(int gameStatus) {
+    switch (gameStatus) {
+      // X
+      case -1:
+        this.gameEnded = true;
+        for (int i=0; i<9; i+=2) this.buttons[i].setBackground(Color.BLACK);
+        this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
+        this.buttons[4].setText("Wygrywa krzyżyk");
+        this.buttons[4].setForeground(Color.WHITE);
+        break;
+      // Draw
+      case 0:
+        this.gameEnded = true;
+        for (int i=0; i<9; i++) this.buttons[i].setBackground(Color.black);
+        this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
+        this.buttons[4].setText("Remis");
+        this.buttons[4].setForeground(Color.WHITE);
+        break;
+      // O
+      case 1:
+        this.gameEnded = true;
+        for (int i=0; i<9; i++) this.buttons[i].setBackground(Color.BLACK);
+        this.buttons[4].setFont(new Font("Arial", Font.BOLD, 16));
+        this.buttons[4].setBackground(Color.WHITE);
+        this.buttons[4].setText("Wygrywa kółko");
+        break;
+    }
+  }
+ 
   private void restart() {
+    // lazy approach
     remove(this.btnPanel);
+    remove(this.turnLabel);
     this.j = 0;
     this.gameEnded = false;
     this.turn = true;
-
+ 
     setupButtons();
     revalidate();
     repaint();
