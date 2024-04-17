@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,7 +15,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.Border;
 
 // !!!!!!!!!!!!!!!!!
 // CHANGE IMIE_NAZWISKO
@@ -245,12 +241,7 @@ class GraphPanel extends JPanel {
             continue;
           }
           g.drawLine(x-gain, getHeight() - prevVal, x, getHeight() - val);
-            // int y = Integer.parseInt(line.trim());
-            // g.fillOval(x - 2, getHeight() - y - 2, 4, 4);
-            // if (x > 50) {
-            //     int prevY = Integer.parseInt(reader.readLine().trim());
-            //     g.drawLine(x - 1, getHeight() - prevY - 1, x, getHeight() - y - 1);
-            // }
+
           x += gain;
           prevVal = val;
         }
