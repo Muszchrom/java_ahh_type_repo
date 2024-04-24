@@ -4,11 +4,14 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -169,6 +172,19 @@ class Kulka extends JPanel {
     this.speed = 15;
     this.angleRad = (11d/6d)*Math.PI;
     setPreferredSize(new Dimension(800, 600));
+
+    JPanel buttonPanel = new JPanel();
+    JButton xCollisionButton = new JButton("X collision");
+    JButton yCollisionButton = new JButton("Y collision");
+    xCollisionButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {xCollision();}
+    });
+    yCollisionButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {yCollision();}
+    });
+    buttonPanel.add(xCollisionButton);
+    buttonPanel.add(yCollisionButton);
+    add(buttonPanel);
   }
   @Override
   protected void paintComponent(Graphics g) {
@@ -177,9 +193,12 @@ class Kulka extends JPanel {
     g.fillOval(this.posX, this.posY, 20, 20);
     this.posX += (int) Math.round(Math.cos(angleRad)*speed);
     this.posY += (int) Math.round(Math.sin(angleRad)*speed);
-    if (this.posY < 0) this.angleRad = 2d*Math.PI - this.angleRad;
-    if (this.posX > 800) this.angleRad = Math.PI - this.angleRad;
-    if (this.posY > 600) this.angleRad = 2d*Math.PI - this.angleRad;
-    if (this.posX < 0) this.angleRad = Math.PI - this.angleRad;
+    if (this.posY < 0) xCollision();
+    if (this.posX > 800) yCollision();
+    if (this.posY > 600) xCollision();
+    if (this.posX < 0) yCollision();
   }
+
+  private void xCollision() {this.angleRad = 2d*Math.PI - this.angleRad;}
+  private void yCollision() {this.angleRad = Math.PI - this.angleRad;}
 }
