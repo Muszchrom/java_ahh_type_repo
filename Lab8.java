@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,7 +19,7 @@ public class Lab8 {
   public static void main(String[] args) {
     EventQueue.invokeLater(() -> {
       try {
-        Lab8 window = new Lab8(1);
+        Lab8 window = new Lab8(2);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -29,9 +31,9 @@ public class Lab8 {
       case 1:
         Zadanie1 z1 = new Zadanie1();
         break;
-      // case 2:
-      //   Zadanie2 z2 = new Zadanie2();
-      //   break;
+      case 2:
+        Zadanie2 z2 = new Zadanie2();
+        break;
       // case 3:
       //   Zadanie3 z3 = new Zadanie3();
       //   break;
@@ -124,5 +126,60 @@ class Slider extends JSlider {
     setMinimum(0);
     setMaximum(100);
     setValue(50);
+  }
+}
+
+class Zadanie2 extends JFrame implements Runnable {
+  Thread thread = null;
+  Integer delay = 20;
+
+  public Zadanie2() {
+    setTitle("ZAD1_IMIE_NAZWISKO");
+    setVisible(true);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    add(new Kulka());
+    pack();
+    this.thread = new Thread(this);
+    thread.start();
+  }
+
+  @Override
+  public void run() {
+    while (this.thread != null) {
+      try {
+        // Thread a nie thread bo sleep to satyczna metoda
+        Thread.sleep(this.delay);
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
+      repaint();
+    }
+  }
+}
+
+class Kulka extends JPanel {
+  private Integer speed;
+  private Double angleRad;
+  private Integer posX;
+  private Integer posY;
+
+  public Kulka () {
+    this.posX = 50;
+    this.posY = 50;
+    this.speed = 15;
+    this.angleRad = (11d/6d)*Math.PI;
+    setPreferredSize(new Dimension(800, 600));
+  }
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.setColor(new Color(255, 0, 0));
+    g.fillOval(this.posX, this.posY, 20, 20);
+    this.posX += (int) Math.round(Math.cos(angleRad)*speed);
+    this.posY += (int) Math.round(Math.sin(angleRad)*speed);
+    if (this.posY < 0) this.angleRad = 2d*Math.PI - this.angleRad;
+    if (this.posX > 800) this.angleRad = Math.PI - this.angleRad;
+    if (this.posY > 600) this.angleRad = 2d*Math.PI - this.angleRad;
+    if (this.posX < 0) this.angleRad = Math.PI - this.angleRad;
   }
 }
